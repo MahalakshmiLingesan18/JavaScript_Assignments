@@ -1,1 +1,1 @@
-# JavaScript_Assignments
+# Playwright_Assignments
