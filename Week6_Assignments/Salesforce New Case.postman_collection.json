@@ -1,0 +1,357 @@
+{
+	"info": {
+		"_postman_id": "7843f123-4615-47b8-ba00-0c3eb741637d",
+		"name": "Salesforce New Case",
+		"description": "SalesForce API's to perform CRUD Operations on Leads and Accounts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47034651",
+		"_collection_link": "https://maintenance-operator-54135072-2454326.postman.co/workspace/Mahalakshmi-Lingesan's-Workspac~e9af3838-06c3-44cf-8278-ef908dad012c/collection/47034651-7843f123-4615-47b8-ba00-0c3eb741637d?action=share&source=collection_link&creator=47034651"
+	},
+	"item": [
+		{
+			"name": "Generate OAuth Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"var instanceURL = responseBody.instance_url;\r",
+							"pm.collectionVariables.set(\"SF_Inst_URL\", instanceURL);\r",
+							"\r",
+							"var accessToken=responseBody.access_token;\r",
+							"pm.collectionVariables.set(\"SF_Access_Token\", accessToken);\r",
+							"\r",
+							"var tokenType = responseBody.token_type;\r",
+							"pm.collectionVariables.set(\"SF_Token_Type\", tokenType)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "3MVG9rZjd7MXFdLglznW11xVPG8C7SnmGMjER8YQDn_zbLVufGI.UZJg_PKFZHA9gH1X6wgfUmw==",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "B4A2A680E9DD8055A68D144D0B7640E2C543F80A3C4A45594E3DA81D6CAB6FD1",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "mahalakshmilingesan@testleaf.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Testleaf@123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://login.salesforce.com/services/oauth2/token",
+					"protocol": "https",
+					"host": [
+						"login",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"services",
+						"oauth2",
+						"token"
+					]
+				},
+				"description": "Generate OAuth Token for accessing Sales Force API's"
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Case in SalesForce",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"var id = responseBody.id;\r",
+							"pm.collectionVariables.set(\"SF_ID\", id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"connection": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{SF_Token_Type}}{{SF_Access_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Status\":\"Escalated\",\r\n    \"Origin\":\"Email\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SF_Inst_URL}}/services/data/v64.0/sobjects/Case",
+					"host": [
+						"{{SF_Inst_URL}}"
+					],
+					"path": [
+						"services",
+						"data",
+						"v64.0",
+						"sobjects",
+						"Case"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Case Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"connection": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{SF_Token_Type}}{{SF_Access_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SF_Inst_URL}}/services/data/v64.0/sobjects/Case/{{SF_ID}}",
+					"host": [
+						"{{SF_Inst_URL}}"
+					],
+					"path": [
+						"services",
+						"data",
+						"v64.0",
+						"sobjects",
+						"Case",
+						"{{SF_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Case in Salesforce",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{SF_Token_Type}}{{SF_Access_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SF_Inst_URL}}/services/data/v64.0/sobjects/Case/{{SF_ID}}",
+					"host": [
+						"{{SF_Inst_URL}}"
+					],
+					"path": [
+						"services",
+						"data",
+						"v64.0",
+						"sobjects",
+						"Case",
+						"{{SF_ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "lead_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "account_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "SF_Access_Token",
+			"value": ""
+		},
+		{
+			"key": "SF_Inst_URL",
+			"value": ""
+		},
+		{
+			"key": "SF_Token_Type",
+			"value": ""
+		},
+		{
+			"key": "SF_ID",
+			"value": ""
+		}
+	]
+}

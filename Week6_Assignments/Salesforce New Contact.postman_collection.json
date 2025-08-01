@@ -1,0 +1,295 @@
+{
+	"info": {
+		"_postman_id": "9dfdb4e2-5556-49ba-a50a-1dfb87198111",
+		"name": "Salesforce New Contact",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47034651",
+		"_collection_link": "https://maintenance-operator-54135072-2454326.postman.co/workspace/Mahalakshmi-Lingesan's-Workspac~e9af3838-06c3-44cf-8278-ef908dad012c/collection/47034651-9dfdb4e2-5556-49ba-a50a-1dfb87198111?action=share&source=collection_link&creator=47034651"
+	},
+	"item": [
+		{
+			"name": "Generate OAuth Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"var instanceURL = responseBody.instance_url;\r",
+							"pm.collectionVariables.set(\"SF_Inst_URL\", instanceURL);\r",
+							"\r",
+							"var accessToken=responseBody.access_token;\r",
+							"pm.collectionVariables.set(\"SF_Access_Token\", accessToken);\r",
+							"\r",
+							"var tokenType = responseBody.token_type;\r",
+							"pm.collectionVariables.set(\"SF_Token_Type\", tokenType)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "3MVG9rZjd7MXFdLglznW11xVPG8C7SnmGMjER8YQDn_zbLVufGI.UZJg_PKFZHA9gH1X6wgfUmw==",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "B4A2A680E9DD8055A68D144D0B7640E2C543F80A3C4A45594E3DA81D6CAB6FD1",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "mahalakshmilingesan@testleaf.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Testleaf@123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://login.salesforce.com/services/oauth2/token",
+					"protocol": "https",
+					"host": [
+						"login",
+						"salesforce",
+						"com"
+					],
+					"path": [
+						"services",
+						"oauth2",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve all Contacts Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"content-type": true,
+					"connection": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{SF_Token_Type}}{{SF_Access_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{SF_Inst_URL}}/services/data/v64.0/sobjects/Contact/{{SF_ID}}",
+					"host": [
+						"{{SF_Inst_URL}}"
+					],
+					"path": [
+						"services",
+						"data",
+						"v64.0",
+						"sobjects",
+						"Contact",
+						"{{SF_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Contact Details Using a PATCH Call",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{SF_Token_Type}}{{SF_Access_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Phone\":\"1234567890\",\r\n    \"Email\":\"maha@gmail.com\",\r\n    \"Title\":\"Dr.\",\r\n    \"Department\":\"Software\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SF_Inst_URL}}/services/data/v64.0/sobjects/Contact/{{SF_ID}}",
+					"host": [
+						"{{SF_Inst_URL}}"
+					],
+					"path": [
+						"services",
+						"data",
+						"v64.0",
+						"sobjects",
+						"Contact",
+						"{{SF_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Contact in Salesforce",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{SF_Token_Type}}{{SF_Access_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{SF_Inst_URL}}/services/data/v64.0/sobjects/Contact/{{SF_ID}}",
+					"host": [
+						"{{SF_Inst_URL}}"
+					],
+					"path": [
+						"services",
+						"data",
+						"v64.0",
+						"sobjects",
+						"Contact",
+						"{{SF_ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "SF_Inst_URL",
+			"value": ""
+		},
+		{
+			"key": "SF_Access_Token",
+			"value": ""
+		},
+		{
+			"key": "SF_Token_Type",
+			"value": ""
+		}
+	]
+}
